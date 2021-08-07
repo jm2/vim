@@ -64,6 +64,10 @@ Unicode true
 !include "Sections.nsh"
 !include "x64.nsh"
 
+!include FileFunc.nsh
+!insertmacro GetParameters
+!insertmacro GetOptions
+
 !define PRODUCT		"Vim ${VER_MAJOR}.${VER_MINOR}"
 !define UNINST_REG_KEY	"Software\Microsoft\Windows\CurrentVersion\Uninstall"
 !define UNINST_REG_KEY_VIM  "${UNINST_REG_KEY}\${PRODUCT}"
@@ -767,6 +771,12 @@ Function .onInit
   StrCpy $0 "$INSTDIR\vim${VER_MAJOR}${VER_MINOR}"
   StrCpy $1 "-register-OLE"
   StrCpy $2 "gvim evim gview gvimdiff vimtutor"
+
+  ${GetParameters} $R4
+  ClearErrors
+  # typical=1,minimal=2,full=3
+  ${GetOptions} $R4 /INSTTYPE= $4
+  SetCurInstType $4
 FunctionEnd
 
 Function .onInstSuccess
